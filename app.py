@@ -8,6 +8,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 from flask_pymongo import PyMongo
+from enum import Enum
 
 import json
 
@@ -170,6 +171,30 @@ def getByJR():
         if jr_id is None:
             response["message"] = "Job requisition id is null"
             return response
+        
+@app.route('/changeCandStatus', methods=['PUT'])
+def changeCandStatus():
+    class interviewStages(Enum):
+        TECH1 = "Tech-Round-1"
+        TECH2 = "Tech-Round-2"
+        FINAL = "Final-Round"
+    req_candidates = request.get_json()
+    key = next(iter(req_candidates))
+    candidate = req_candidates[key]
+    if request.method == 'PUT':
+        for i in candidate:
+            if i["interview_stage"] is not None:
+                def switch_example(stage):
+                    if stage == interviewStages.TECH1.value:
+                        i["interview_stage"] = interviewStages.TECH2.value
+                        return
+                    elif stage == interviewStages.TECH2.value:
+                        i["interview_stage"] = interviewStages.FINAL.value
+                        return
+                    else:
+                        i["interview_stage"] = interviewStages.FINAL.value
+                switch_example(i["interview_stage"])
+        return candidate
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
