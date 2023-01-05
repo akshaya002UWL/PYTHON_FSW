@@ -119,14 +119,13 @@ def filterProfiles():
             return response
 
 
-@app.route('/getByJR', methods=['POST'])
+@app.route('/getByJR', methods=['GET'])
 def getByJR():
     response = {}
     candidateList = []
-    req_candidates = request.get_json()
-    key = next(iter(req_candidates))
-    candidate = req_candidates[key]
-    if request.method == 'POST':
+    can = mongo.db.Candidate_Details.find({}, {'_id': False})
+    candidate = list(can)
+    if request.method == 'GET':
         jr_id = request.args.get('jobReqId')
         req_skills = request.args.get('skills')
         experience = request.args.get('experience')
