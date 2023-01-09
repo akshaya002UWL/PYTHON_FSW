@@ -195,5 +195,25 @@ def changeCandStatus():
                 switch_example(i["interview_stage"])
         return candidate
 
+@app.route('/getJRId', methods=['GET'])
+def getJRId():
+    print('reac')
+    if request.method == 'GET':
+        print('start')
+        input_data = request.get_json()
+        key = next(iter(input_data))
+        existing_jr = input_data[key]
+        print(existing_jr)
+        response = {}
+        if existing_jr is not None and "jobReqId" in existing_jr:
+            response["jobReqId"] = existing_jr["jobReqId"]
+        else:
+            response["message"] = "No JR ID found"
+        response_string = json.dumps(response, default=str)
+        response_json = json.loads(response_string)
+        print(response_json)
+        return response_json
+    
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
