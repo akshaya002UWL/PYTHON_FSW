@@ -195,10 +195,10 @@ def changeCandStatus():
                 switch_example(i["interview_stage"])
         return candidate
 
-@app.route('/getJRId', methods=['GET'])
+@app.route('/getJRId', methods=['POST'])
 def getJRId():
     print('reac')
-    if request.method == 'GET':
+    if request.method == 'POST':
         print('start')
         input_data = request.get_json()
         key = next(iter(input_data))
