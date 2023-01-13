@@ -214,6 +214,33 @@ def getJRId():
         print(response_json)
         return response_json
     
+@app.route('/modifyDescComp', methods=['POST'])
+def update_JDAndComp():
+    if request.method == 'POST':
+        input_data = request.get_json()
+        key = next(iter(input_data))
+        input_josn = input_data[key]
+        print(input_josn)
+        input_josn['hiringManager'] = request.args.get("HiringManager")
+        input_josn['recruiter'] = request.args.get("Recruiter")
+        print("request.args.get(HiringManager) = " + request.args.get("HiringManager"))
+        print("request.args.get(Recruiter) = " + request.args.get("Recruiter"))
 
+        #Job_Requisition = input_josn['Job_Requisition']
+        #Job_Requisition = mongo.db.WORecruitmentFlow.find_one( {"jobReqId": jobReqId},{"_id": 0} );
+        # print(Job_Requisition)
+        #Job_Requisition = request.get_json();
+        # print(Job_Requisition)
+        #Job_Requisition['jobReqLocale'][0]['jobDescription'] = job_description;
+        mongo.db.WORecruitmentFlow.update_one(
+            {"jobReqId": input_josn['jobReqId']}, {"$set": input_josn})
+        Job_Requisition_JSON = {"Job_Requisition": input_josn}
+        json_dumps = json.dumps(Job_Requisition_JSON, default=str)
+        print("--------- Job_Requisition_JSON ---------")
+        print(Job_Requisition_JSON)
+        response = json.loads(json_dumps)
+        return response
+    
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
