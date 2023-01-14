@@ -238,7 +238,7 @@ def update_JDAndComp():
         json_dumps = json.dumps(Job_Requisition_JSON, default=str)
         print("--------- Job_Requisition_JSON ---------")
         print(Job_Requisition_JSON)
-        response['instances'] = json.loads(json_dumps)
+        response = json.loads(json_dumps)
         return response
     
 @app.route('/getJobDescription', methods=['GET'])
@@ -248,7 +248,7 @@ def getJobDescription():
         jr_id = request.args.get('jobReqId')
         can = mongo.db.WORecruitmentFlow.find({"jobReqId":jr_id}, {'_id': False})
         Job_Requisitions = list(can)
-        response =  next((el for el in Job_Requisitions if el is not None), {})
+        response['instances'] =  next((el for el in Job_Requisitions if el is not None), {})
         return response
 
     
