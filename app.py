@@ -251,6 +251,75 @@ def getJobDescription():
         response['instances'] =  next((el for el in Job_Requisitions if el is not None), {})
         return response
 
-    
+@app.route('/postJOBRequisition', methods=['POST'])
+def post_job():
+    if request.method == 'POST':
+        jobReqId = request.args.get("jobReqId")
+        jobProfile = request.args.get("jobProfile")
+        channelName = request.args.get("channelName")
+        print(jobReqId + " " + jobProfile + " " + channelName)
+        print(request.get_json())
+
+        jrs_withoutid = mongo.db.WORecruitmentFlow.find_one(
+                {"jobReqId": jobReqId}, {"_id": 0})
+        print("post job jrs_withoutid = " + str(jrs_withoutid))
+        jrs_withoutid_string = dumps(jrs_withoutid)
+        jrs_withoutid_json = json.loads(jrs_withoutid_string)
+        jobDesc = jrs_withoutid_json["jobDescription"]
+        response_json = {}
+
+        if channelName is not None :
+            if channelName == "Linked In" or channelName == "LinkedIn": 
+                print("inside if channelName " + channelName)
+                url = "https://api.linkedin.com/v2/ugcPosts"
+
+                payload = json.dumps({
+                "author": "urn:li:person:Ayyquo2cKD",
+                "lifecycleState": "PUBLISHED",
+                "specificContent": {
+                    "com.linkedin.ugc.ShareContent": {
+                    "shareCommentary": {
+                        "text": jobDesc + " \n Please send email to 'jobs@woacmecorp.com' for further details."
+                    },
+                    "shareMediaCategory": "NONE"
+                    }
+                },
+                "visibility": {
+                    "com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
+                }
+                })
+                headers = {
+                'Authorization': 'Bearer AQWRfu3AN9G8-xnxk3cY0JaTTdc4iO-7WUKLl4upLkwcRwckfqvQ9Lw1hrcBYVZpRnQDvVmPiCSLJclDdvj9qoEMZbxloZ8UtEbmx090gltvOkFqhWhd1cp1QODXlfxNF-n9ABCFFlPQ7uQwALKUsRepj6Q87l8_uc5cUmhbqFEz3djX-lHqtmoEB4FVa4SBZ_JFiBDvParG316JaUlZGmwTwHBOk2N_zA4ceQeOcTrdXy7WUmMbXd2Vd7AzKF0Oqtl_Ws_RKwd28HnAbnKKsarzrnidjqZYPIcedK7U_XwMP6xMLxrk9YzbIpLXU8baWbRAuTPUSiwPThycM5cuuaBL48uNcw',
+                'Content-Type': 'application/json',
+                'Cookie': 'lidc="b=VB51:s=V:r=V:a=V:p=V:g=3284:u=4:x=1:i=1671642348:t=1671646515:v=2:sig=AQHVEdai1Q7Lj8Q0N3KQa7lXThuRe94y"; bcookie="v=2&f4a53cc3-9f87-47d7-8a78-cf544bcd2e41"; lang=v=2&lang=en-us; lidc="b=VB51:s=V:r=V:a=V:p=V:g=3284:u=4:x=1:i=1671642243:t=1671642915:v=2:sig=AQHvcQ2xL0pmGu5QzgdkFrF8rt1CBDV8"'
+                }
+
+                response = requests.request("POST", url, headers=headers, data=payload)
+
+                print(response.text)
+
+                response_text = "Job posted in LinkedIn. \n Please check this url to view the job posting : https://www.linkedin.com/in/test-account-wo-acme-corp-a9b34725b/recent-activity/"
+
+                response_json["response"] = response_text
+
+                return response_json
+
+            elif None not in (jobReqId, jobProfile, channelName) and channelName == "Internal Posting" :
+
+                response_text = "Posted Job " + jobReqId + " for " + str(jobProfile) + " on the " + str(channelName)
+                response_json["response"] = response_text
+
+                return response_json
+
+            else :
+
+                message = jsonify(Error='Invalid channel name')
+                return make_response(message, 400)
+        else : 
+
+                message = jsonify(Error='Invalid inputs...')
+                return make_response(message, 400)
+            
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
