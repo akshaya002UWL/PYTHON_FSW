@@ -248,7 +248,7 @@ def getJobDescription():
         jr_id = request.args.get('jobReqId')
         can = mongo.db.WORecruitmentFlow.find({"jobReqId":jr_id}, {'_id': False})
         Job_Requisitions = list(can)
-        response['instances'] =  next((el for el in Job_Requisitions if el is not None), {})
+        response =  next((el for el in Job_Requisitions if el is not None), {})
         return response
 
     
