@@ -238,7 +238,7 @@ def update_JDAndComp():
         json_dumps = json.dumps(Job_Requisition_JSON, default=str)
         print("--------- Job_Requisition_JSON ---------")
         print(Job_Requisition_JSON)
-        response = json.loads(json_dumps)
+        response['instances'] = json.loads(json_dumps)
         return response
     
 @app.route('/getJobDescription', methods=['GET'])
