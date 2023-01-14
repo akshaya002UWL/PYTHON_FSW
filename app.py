@@ -241,6 +241,16 @@ def update_JDAndComp():
         response = json.loads(json_dumps)
         return response
     
+@app.route('/getJobDescription', methods=['GET'])
+def getJobDescription():
+    if request.method == 'GET':
+        response = {}
+        jr_id = request.args.get('jobReqId')
+        can = mongo.db.WORecruitmentFlow.find({"jobReqId":jr_id}, {'_id': False})
+        Job_Requisitions = list(can)
+        response['instances'] =  next((el for el in Job_Requisitions if el is not None), {})
+        return response
+
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
