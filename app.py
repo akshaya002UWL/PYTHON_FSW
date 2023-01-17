@@ -223,8 +223,8 @@ def update_JDAndComp():
         print(input_josn)
         input_josn['hiringManager'] = request.args.get("HiringManager").replace('%20+', '')
         input_josn['recruiter'] = request.args.get("Recruiter").replace('%20+', '')
-        print("request.args.get(HiringManager) = " + request.args.get("HiringManager"))
-        print("request.args.get(Recruiter) = " + request.args.get("Recruiter"))
+        print("request.args.get(HiringManager) == " + request.args.get("HiringManager"))
+        print("request.args.get(Recruiter) == " + request.args.get("Recruiter"))
 
         #Job_Requisition = input_josn['Job_Requisition']
         #Job_Requisition = mongo.db.WORecruitmentFlow.find_one( {"jobReqId": jobReqId},{"_id": 0} );
