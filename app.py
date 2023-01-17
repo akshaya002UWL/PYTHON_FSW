@@ -320,6 +320,17 @@ def post_job():
                 message = jsonify(Error='Invalid inputs...')
                 return make_response(message, 400)
             
+@app.route('/getJobDeStatic', methods=['GET'])
+def getJobDeStatic():
+    if request.method == 'GET':
+        response = {}
+        response =   {
+                        "jobReqId": "JR1234",
+                        "jobDescription":"Test job description",
+                        "jobProfile":"Devops Engineer"
+                    }
+        return response
 
+  
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
