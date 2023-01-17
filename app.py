@@ -221,8 +221,8 @@ def update_JDAndComp():
         key = next(iter(input_data))
         input_josn = input_data[key]
         print(input_josn)
-        input_josn['hiringManager'] = request.args.get("HiringManager")
-        input_josn['recruiter'] = request.args.get("Recruiter")
+        input_josn['hiringManager'] = request.args.get("HiringManager").replace('%20+', '')
+        input_josn['recruiter'] = request.args.get("Recruiter").replace('%20+', '')
         print("request.args.get(HiringManager) = " + request.args.get("HiringManager"))
         print("request.args.get(Recruiter) = " + request.args.get("Recruiter"))
 
