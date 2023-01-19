@@ -125,7 +125,6 @@ def getByJR():
     candidateList = []
     can = mongo.db.Candidate_Details.find({}, {'_id': False})
     candidate = list(can)
-    print("Incoming call " + now.time())
     if request.method == 'GET':
         jr_id = request.args.get('jobReqId')
         req_skills = request.args.get('skills')
