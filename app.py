@@ -336,51 +336,5 @@ def getJobDeStatic():
                     }
         return response
 
-
-@app.post("/contact_candidate", callbacks=callback_router.routes)
-async def contact_candidate(request: Request, response: Response, candidate_list: Input_Candidate_array, callbackUrl: Union[str, None] = Header(default=None)):
-    result = {}
-    print("list of candidates from input")
-    print("Candidate Filtered list ------", await request.json())
-
-    candidate_list = await request.json()
-
-    candidate_value, = candidate_list.values()
-    for json_object in candidate_value:
-        print(json_object)
-        json_object["contact_status"] = "yes"
-        json_object["candidateStatus"] = "interested"
-
-    print("Contacted Candidate list ------", candidate_value)
-
-    contacted_cand = {}
-    cnd_list = []
-    for items in candidate_value:
-        result = {}
-        result['candidateId'] = items["candidateId"]
-        result["jobReqId"] = items["jobReqId"]
-        result['firstName'] = items["firstName"]
-        result['lastName'] = items["lastName"]
-        result['city'] = items["city"]
-        result['country'] = items["country"]
-        result['contactEmail'] = items["contactEmail"]
-        result['currentTitle'] = items["currentTitle"]
-        result['dateofAvailability'] = items["dateofAvailability"]
-        result["contact_status"] = items["contact_status"]
-        result["candidateStatus"] = items["candidateStatus"]
-
-        # print(result)
-        cnd_list.append(result)
-    contacted_cand["candidate_data"] = cnd_list
-    print("result ----- ", contacted_cand)
-
-    request_example = Candidate_array(candidate_data=cnd_list)
-
-    thr = threading.Thread(target=call_callback, args=[callbackUrl, request_example])
-    thr.start()
-
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return "Initiated contact candidate. This task might take sometime. Will notify once the task is completed."
-  
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
