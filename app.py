@@ -129,6 +129,7 @@ def getByJR():
         jr_id = request.args.get('jobReqId')
         req_skills = request.args.get('skills')
         experience = request.args.get('experience')
+        print(req_skills+','+experience)
         skill_res = None if req_skills is None else req_skills.split(',')
         exp_inp = None if experience is None else (experience+"+").replace(" ", "")
         if jr_id is not None :
