@@ -123,7 +123,9 @@ def filterProfiles():
 def getByJR():
     response = {}
     candidateList = []
-    can = mongo.db.Candidate_Details.find({}, {'_id': False})
+    can = mongo.db.Candidate_Details.
+    
+    ({}, {'_id': False})
     candidate = list(can)
     if request.method == 'GET':
         jr_id = request.args.get('jobReqId')
@@ -252,7 +254,7 @@ def getJobDescription():
         jr_id = request.args.get('jobReqId')
         can = mongo.db.WORecruitmentFlow.find({"jobReqId":jr_id}, {'_id': False})
         Job_Requisitions = list(can)
-        response['instances'] =  next((el for el in Job_Requisitions if el is not None), {})
+        response['Job_Requisition'] =  next((el for el in Job_Requisitions if el is not None), {})
         return response
 
 @app.route('/postJOBRequisition', methods=['POST'])
