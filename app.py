@@ -123,7 +123,7 @@ def filterProfiles():
 def getByJR():
     response = {}
     candidateList = []
-    can = mongo.db.Candidate_Details.({}, {'_id': False})
+    mongo.db.Candidate_Details.find({}, {'_id': False})
     candidate = list(can)
     if request.method == 'GET':
         jr_id = request.args.get('jobReqId')
