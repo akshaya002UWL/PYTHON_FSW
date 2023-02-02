@@ -387,5 +387,26 @@ def create_new_job_requisition():
             response["message"] = "Error in adding new JR"
             return response
 
+@app.route('/wrapJobRequisition', methods=['POST'])
+def wrapJobRequisition():
+    if request.method == 'POST':
+        print("starting api..")
+        response = {}
+        try :
+            if request.get_json() is not None :
+                input_data = request.get_json()
+                key = next(iter(input_data))
+                jr = input_data[key]
+                print(jr)
+                response["Job_Requisition"] = jr
+            else:
+                response["message"] = "No Job_Requisition "
+        except :
+            response["message"] = "Invalid data"
+        response_string = json.dumps(response, default=str)
+        response_json = json.loads(response_string)
+        print(response_json)
+        return response_json
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
