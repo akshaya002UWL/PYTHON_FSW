@@ -324,16 +324,68 @@ def post_job():
                 message = jsonify(Error='Invalid inputs...')
                 return make_response(message, 400)
             
-@app.route('/getJobDeStatic', methods=['GET'])
-def getJobDeStatic():
-    if request.method == 'GET':
+@app.route('/createNewJobRequisition', methods=['POST'])
+def create_new_job_requisition():
+    if request.method == 'POST':
         response = {}
-        response =   {
-                        "jobReqId": "JR1234",
-                        "jobDescription":"Test job description",
-                        "jobProfile":"Devops Engineer"
-                    }
-        return response
+        existing_jr = request.get_json()
+        print("type(existing_jr) = " + str(type(existing_jr)))
+        print("---existing_jr---")
+        print(existing_jr)
+        new_jr = existing_jr["job_requisitions"]
+        print("---new_jr----- BEFORE ----")
+        print(new_jr)
+        print("type(new_jr) = " + str(type(new_jr)))
+        new_jrID = ""
+        if existing_jr is not None and "job_requisitions" in existing_jr and "jobReqId" in existing_jr["job_requisitions"]:
+            existing_jrID = existing_jr["job_requisitions"]["jobReqId"]
+            lastExistingJR = mongo.db.WORecruitmentFlow.find_one(
+                {}, sort=[('jobReqId', -1)])
+            if existing_jrID or lastExistingJR is not None:
+                lastExistingJRId = lastExistingJR["jobReqId"]
+                existing_JRId = ""
+                if lastExistingJRId:
+                    existing_JRId = lastExistingJRId
+                else:
+                    existing_JRId = existing_jrID
+                print("existing_JRId[-4:] = " + existing_JRId[-4:])
+                last_four_chars = existing_JRId[-4:]
+                print(last_four_chars.isnumeric())
+                if (last_four_chars and last_four_chars.isnumeric()):
+                    new_jrID = f'{"JR"}{int(last_four_chars)+1:04d}'
+                if not new_jrID:
+                    new_jrID = "JR" + str(random.randint(1000, 9999))
+                print("new jr id = " + new_jrID)
+            else:
+                new_jrID = "JR" + str(random.randint(1000, 9999))
+            new_jr["jobReqId"] = new_jrID
+            jrs = mongo.db.WORecruitmentFlow.insert_one(new_jr)
+        if new_jr is not None:
+            #response["message"] = "Added new Job requisition with ID = " + new_jrID
+            #response = json.dumps(new_jr, indent = 4)
+            # print(new_jr)
+            #response = jsonify(new_jr)
+            #jrs_json = dumps(jrs)
+            #response = json.loads(jrs_json)
+            #response["message"] = "New JR created!!! New JR ID is : " + new_jrID
+            print("---jrs_withoutid----- AFTER ----")
+            jrs_withoutid = mongo.db.WORecruitmentFlow.find_one(
+                {"jobReqId": new_jrID}, {"_id": 0})
+            print(jrs_withoutid)
+            jrs_withoutid_string = dumps(jrs_withoutid)
+            jrs_withoutid_json = json.loads(jrs_withoutid_string)
+            response["JobRequisitionResponse"] = jrs_withoutid_json
+            response["jobReqId"] = new_jrID
+
+
+            response_string = json.dumps(response, default=str)
+            response_json = json.loads(response_string)
+            print(response_json)
+            return response_json
+            #return response
+        else:
+            response["message"] = "Error in adding new JR"
+            return response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
