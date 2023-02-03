@@ -408,5 +408,227 @@ def wrapJobRequisition():
         print(response_json)
         return response_json
 
+@app.route('/getAllJobRequisitions', methods=['GET'])
+def get_all_job_requisitions():
+    if request.method == 'GET':
+        department = request.args.get('department')
+        jobProfile = request.args.get('jobProfile')
+        location = request.args.get('location')
+        status = request.args.get('status')
+
+        try:
+            # The below line of code is used to extract JRs inside instances field. Now we don't have instances field in Mongo DB
+            # We have each JR as an individual document in MOngo DB collection so below query is not needed.
+            # jrs = mongo.db.WORecruitmentFlow.find({}, {"instances": 0, "_id": 0})
+            jrs = mongo.db.WORecruitmentFlow.find(
+                {"jobReqId": {"$exists": True}}, {"_id": 0})
+            jrs_string = dumps(jrs)
+            # response = jrs
+            # print("Jrs from Mongo db ==== " + jrs_string)
+            # print(type(jrs_string))
+            # print(type(jrs))
+            jrs_response = []
+            if None not in (department, location, jobProfile, status):
+                print('Query string department = ' + department)
+                print('Query string location = ' + location)
+                print('Query string status = ' + status)
+                print('Query string jobProfile = ' + jobProfile)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if ("city" in i or "country" in i or "state" in i or "location" in i) and "department" in i and "status" in i and "jobProfile" in i:
+                        _city = i["city"].lower()
+                        _country = i["country"].lower()
+                        _state = i["state"].lower()
+                        _department = i["department"].lower()
+                        _location = i["location"].lower()
+                        _status = i["status"].lower()
+                        _jobProfile = i["jobProfile"].lower()
+                        if (((_city is not None and _city and location.lower() in _city)
+                        or (_country is not None and _country and location.lower() in _country)
+                        or (_state is not None and _state and location.lower() in _state)
+                        or (_location is not None and _location and location.lower() in _location))
+                        and (_status is not None and _status and status.lower() in _status)
+                        and (_jobProfile is not None and _jobProfile and jobProfile.lower() in _jobProfile)):
+                            print("_city" + _city)
+                            print("_country" + _country)
+                            print("_state" + _state)
+                            print("_location" + _location)
+                            print("_department" + _department)
+                            print("_status" + _status)
+                            print("_jobProfile" + _jobProfile)
+                            jrs_response.append(i)
+            elif None not in (location, status):
+                print('Query string status = ' + status)
+                print('Query string location = ' + location)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if ("city" in i or "country" in i or "state" in i or "location" in i) and "status" in i:
+                        _city = i["city"].lower()
+                        _country = i["country"].lower()
+                        _state = i["state"].lower()
+                        _location = i["location"].lower()
+                        _status = i["status"].lower()
+                        if (((_city is not None and _city and location.lower() in _city)
+                        or (_country is not None and _country and location.lower() in _country)
+                        or (_state is not None and _state and location.lower() in _state)
+                        or (_location is not None and _location and location.lower() in _location))
+                                and (_status is not None and _status and status.lower() in _status)):
+                            print("_city" + _city)
+                            print("_country" + _country)
+                            print("_state" + _state)
+                            print("_location" + _location)
+                            print("_status" + _status)
+                            jrs_response.append(i)
+            elif None not in (department, status):
+                print('Query string department = ' + department)
+                print('Query string location = ' + location)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if "department" in i and "status" in i:
+                        _department = i["department"].lower()
+                        _status = i["status"].lower()
+                        if ((_department is not None and _department and department.lower() in _department)
+                                and (_status is not None and _status and status.lower() in _status)):
+                            print("_department" + _department)
+                            print("_status" + _status)
+                            jrs_response.append(i)
+            elif None not in (location, department):
+                print('Query string department = ' + department)
+                print('Query string location = ' + location)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if ("city" in i or "country" in i or "state" in i or "location" in i) and "department" in i:
+                        _city = i["city"].lower()
+                        _country = i["country"].lower()
+                        _state = i["state"].lower()
+                        _location = i["location"].lower()
+                        _department = i["department"].lower()
+                        if (((_city is not None and _city and location.lower() in _city)
+                        or (_country is not None and _country and location.lower() in _country)
+                        or (_state is not None and _state and location.lower() in _state)
+                        or (_location is not None and _location and location.lower() in _location))
+                                and (_department is not None and _department and department.lower() in _department)):
+                            print("_city" + _city)
+                            print("_country" + _country)
+                            print("_state" + _state)
+                            print("_location" + _location)
+                            print("_department" + _department)
+                            jrs_response.append(i)
+            elif None not in (location, jobProfile):
+                print('Query string location = ' + location)
+                print('Query string jobProfile = ' + jobProfile)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if ("city" in i or "country" in i or "state" in i or "location" in i) and "jobProfile" in i:
+                        _city = i["city"].lower()
+                        _country = i["country"].lower()
+                        _state = i["state"].lower()
+                        _location = i["location"].lower()
+                        _jobProfile = i["jobProfile"].lower()
+                        if (((_city is not None and _city and location.lower() in _city)
+                        or (_country is not None and _country and location.lower() in _country)
+                        or (_state is not None and _state and location.lower() in _state)
+                        or (_location is not None and _location and location.lower() in _location))
+                                and (_jobProfile is not None and _jobProfile and jobProfile.lower() in _jobProfile)):
+                            print("_city" + _city)
+                            print("_country" + _country)
+                            print("_state" + _state)
+                            print("_jobProfile" + _jobProfile)
+                            jrs_response.append(i)
+            elif None not in (jobProfile, department):
+                print('Query string department = ' + department)
+                print('Query string jobProfile = ' + jobProfile)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if "jobProfile" in i and "department" in i:
+                        _jobProfile = i["jobProfile"].lower()
+                        _department = i["department"].lower()
+                        if ((_jobProfile is not None and _jobProfile and jobProfile.lower() in _jobProfile)
+                                and (_department is not None and _department and department.lower() in _department)):
+                            print("_jobProfile" + _jobProfile)
+                            print("_department" + _department)
+                            jrs_response.append(i)
+            elif department is not None:
+                print('Query string department = ' + department)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if "department" in i:
+                        _department = i["department"].lower()
+                        if ((_department is not None and _department and department.lower() in _department)):
+                            print("_department" + _department)
+                            jrs_response.append(i)
+            elif jobProfile is not None:
+                print('Query string jobProfile = ' + jobProfile)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if "jobProfile" in i:
+                        _jobProfile = i["jobProfile"].lower()
+                        if ((_jobProfile is not None and _jobProfile and jobProfile.lower() in _jobProfile)):
+                            print("_jobProfile" + _jobProfile)
+                            jrs_response.append(i)
+            elif location is not None:
+                print('Query string location = ' + location)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if ("city" in i or "country" in i or "state" in i or "location" in i):
+                        _city = i["city"].lower()
+                        _country = i["country"].lower()
+                        _state = i["state"].lower()
+                        _location = i["location"].lower()
+                        _status = i["status"].lower()
+                        if (((_city is not None and _city and location.lower() in _city)
+                        or (_country is not None and _country and location.lower() in _country)
+                        or (_state is not None and _state and location.lower() in _state)
+                        or (_location is not None and _location and location.lower() in _location))):
+                            print("_city" + _city)
+                            print("_country" + _country)
+                            print("_state" + _state)
+                            print("_location" + _location)
+                            print("_status" + _status)
+                            jrs_response.append(i)
+            elif status is not None:
+                print('Query string status = ' + status)
+                jrs_json = json.loads(jrs_string)
+                # print('type(jrs_json = ' + str(type(jrs_json)))
+                for i in jrs_json:
+                    if "status" in i:
+                        _status = i["status"].lower()
+                        if ((_status is not None and _status and status.lower() in _status)):
+                            print("_status" + _status)
+                            jrs_response.append(i)
+
+            if not jrs_response and jrs_string:
+                jrs_response = json.loads(jrs_string)
+                response = {}
+                response['instances'] = jrs_response
+                print("response - if " + str(response))
+                return response
+            elif jrs_response:
+                # jrs_response_json = jsonify(jrs_response)
+                response = {}
+                response['instances'] = jrs_response
+                print("response - else " + str(jrs_response))
+                print("response - else " + str(response))
+                return response
+            else:
+                response = {"errorCode": "ER102",
+                            "errorMessage": "Could not find the JRs"}
+                return response
+
+        except Exception as e:
+
+            response = {"errorCode": "ER101",
+                        "errorMessage": e}
+            return response
+ 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
