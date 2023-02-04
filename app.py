@@ -423,9 +423,6 @@ def get_all_job_requisitions():
             jrs = mongo.db.WORecruitmentFlow.find(
                 {"jobReqId": {"$exists": True}}, {"_id": 0})
             jrs_string = dumps(jrs)
-            # print('Query string location = ' + location)
-            print('Query string status = ' + status)
-            print('Query string jobProfile = ' + jobProfile)
             jrs_response = []
             print(jrs_response)
             if None not in ( location, jobProfile, status):
