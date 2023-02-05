@@ -426,6 +426,8 @@ def get_all_job_requisitions():
             jrs_response = []
             print(jrs_response)
             if None not in ( location, jobProfile, status):
+                jobProfile = jobProfile.replace('%20', ' ')
+                location = location.replace('%20', ' ')
                 print('Query string department = ' + department)
                 print('Query string location = ' + location)
                 print('Query string status = ' + status)
@@ -461,6 +463,7 @@ def get_all_job_requisitions():
                                         
                         # print(jrs_response)
             elif None not in (location, status):
+                location = location.replace('%20', ' ')
                 print('Query string status = ' + status)
                 print('Query string location = ' + location)
                 jrs_json = json.loads(jrs_string)
@@ -484,6 +487,8 @@ def get_all_job_requisitions():
                             print("_status" + _status)
                             jrs_response.append(i)
             elif None not in (location, jobProfile):
+                jobProfile = jobProfile.replace('%20', ' ')
+                location = location.replace('%20', ' ')
                 print('Query string location = ' + location)
                 print('Query string jobProfile = ' + jobProfile)
                 jrs_json = json.loads(jrs_string)
@@ -506,6 +511,7 @@ def get_all_job_requisitions():
                             print("_jobProfile" + _jobProfile)
                             jrs_response.append(i)
             elif None not in (jobProfile, status):
+                jobProfile = jobProfile.replace('%20', ' ')
                 print('Query string status = ' + status)
                 print('Query string jobProfile = ' + jobProfile)
                 jrs_json = json.loads(jrs_string)
@@ -520,6 +526,7 @@ def get_all_job_requisitions():
                             print("_department" + _status)
                             jrs_response.append(i)
             elif jobProfile is not None:
+                jobProfile = jobProfile.replace('%20', ' ')
                 print('Query string jobProfile = ' + jobProfile)
                 jrs_json = json.loads(jrs_string)
                 # print('type(jrs_json = ' + str(type(jrs_json)))
@@ -530,6 +537,7 @@ def get_all_job_requisitions():
                             print("_jobProfile" + _jobProfile)
                             jrs_response.append(i)
             elif location is not None:
+                location = location.replace('%20', ' ')
                 print('Query string location = ' + location)
                 jrs_json = json.loads(jrs_string)
                 # print('type(jrs_json = ' + str(type(jrs_json)))
