@@ -569,7 +569,7 @@ def get_all_job_requisitions():
                             print("_status" + _status)
                             jrs_response.append(i)
 
-            if not  jrs_string:
+            if not jrs_string or not jrs_response :
                 jrs_response = json.loads(jrs_string)
                 response = {}
                 response['instances'] = jrs_response
