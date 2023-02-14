@@ -304,7 +304,7 @@ def post_job():
 
                     print(response.text)
 
-                    response_text = "Job posted in LinkedIn. \n Please check this url to view the job posting : https://www.linkedin.com/in/test-account-wo-acme-corp-a9b34725b/recent-activity/"
+                    response_text = "https://www.linkedin.com/in/test-account-wo-acme-corp-a9b34725b/recent-activity/"
 
                     response_json["response"] = response_text
 
