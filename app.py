@@ -335,16 +335,19 @@ def create_new_job_requisition():
     if request.method == 'POST':
         response = {}
         existing_jr = request.get_json()
+        key = next(iter(existing_jr))
+        input_josn = existing_jr[key]
+        print(input_josn)
         print("type(existing_jr) = " + str(type(existing_jr)))
         print("---existing_jr---")
         print(existing_jr)
-        new_jr = existing_jr["job_requisitions"]
+        new_jr = existing_jr[key]
         print("---new_jr----- BEFORE ----")
         print(new_jr)
         print("type(new_jr) = " + str(type(new_jr)))
         new_jrID = ""
-        if existing_jr is not None and "job_requisitions" in existing_jr and "jobReqId" in existing_jr["job_requisitions"]:
-            existing_jrID = existing_jr["job_requisitions"]["jobReqId"]
+        if existing_jr is not None and "jobReqId" in existing_jr[key]:
+            existing_jrID = existing_jr[key]["jobReqId"]
             lastExistingJR = mongo.db.WORecruitmentFlow.find_one(
                 {}, sort=[('jobReqId', -1)])
             if existing_jrID or lastExistingJR is not None:
@@ -392,6 +395,7 @@ def create_new_job_requisition():
         else:
             response["message"] = "Error in adding new JR"
             return response
+
 
 @app.route('/wrapJobRequisition', methods=['POST'])
 def wrapJobRequisition():
