@@ -602,6 +602,27 @@ def get_all_job_requisitions():
             response = {"errorCode": "ER101",
                         "errorMessage": e}
             return response
- 
+        
+@app.get('/common-assets')
+def commonassets():
+    url = "https://cpd-ibm-cloudpaks.cp4ba-mission-16bf47a9dc965a843455de9f2aef2035-0000.eu-de.containers.appdomain.cloud/bas/dba/studio/platform/common-assets"
+    payload={}
+    headers = {
+    'Authorization': 'Basic Y2VhZG1pbjpjZWFkbWluMTIz'
+    }
+    response = requests.request("GET", url, headers=headers, data=payload,verify=False)
+    return (response.text)
+
+@app.get('/detail')
+def detail():
+    url = "https://cpd-ibm-cloudpaks.cp4ba-mission-16bf47a9dc965a843455de9f2aef2035-0000.eu-de.containers.appdomain.cloud/bas/dba/studio/platform/common-assets/2051.835cfdf1-4319-4b8d-87a7-60d320258a67/versions?optional_parts=operations%2Corigin"
+    payload={}
+    headers = {
+    'Authorization': 'Basic Y2VhZG1pbjpjZWFkbWluMTIz'
+    }
+    response = requests.request("GET", url, headers=headers, data=payload,verify=False)
+    return (response.text)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8080)
