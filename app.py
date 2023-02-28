@@ -615,12 +615,15 @@ def commonassets():
 
 @app.get('/detail')
 def detail():
-    url = "https://cpd-ibm-cloudpaks.cp4ba-mission-16bf47a9dc965a843455de9f2aef2035-0000.eu-de.containers.appdomain.cloud/bas/dba/studio/platform/common-assets/2051.835cfdf1-4319-4b8d-87a7-60d320258a67/versions?optional_parts=operations%2Corigin"
+    id = request.args.get("id")
+    url = "https://cpd-ibm-cloudpaks.cp4ba-mission-16bf47a9dc965a843455de9f2aef2035-0000.eu-de.containers.appdomain.cloud/bas/dba/studio/platform/common-assets/<id>/versions?optional_parts=operations%2Corigin"
+    getURL = url.replace("<id>", id)
+    print(getURL)
     payload={}
     headers = {
     'Authorization': 'Basic Y2VhZG1pbjpjZWFkbWluMTIz'
     }
-    response = requests.request("GET", url, headers=headers, data=payload,verify=False)
+    response = requests.request("GET", getURL, headers=headers, data=payload,verify=False)
     return (response.text)
 
 
